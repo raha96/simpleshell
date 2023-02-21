@@ -18,7 +18,11 @@ namespace simpleshell {
                 if (it != commands.end()) {
                     //auto comm = (command*)(it->second);
                     serr << "Calling " << it->first << std::endl;
-                    it->second->exec(tokens);
+                    auto retval = static_cast<command*>(it->second)->exec(tokens);
+                    if (retval == COMSTAT_EXIT) {
+                        exit = true;
+                        break;
+                    }
                 }
                 else {
                     sout << "Unknown command `" << commandname << "`\n";

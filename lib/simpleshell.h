@@ -20,10 +20,10 @@ namespace simpleshell {
         friend class shell;
     public:
         std::string name;
+        inline void set_log(std::ostream& sout) { log = &sout; }
     protected:
         // This should never be called, but it must be implemented to allow use in commands<> map.
         virtual _command_status exec (std::vector<std::string>) { assert(0); };
-        inline void set_log(std::ostream& sout) { log = &sout; }
         std::ostream* log;
     };
 
@@ -31,13 +31,8 @@ namespace simpleshell {
     public:
         shell (std::istream& _sin, std::ostream& _sout, std::ostream& _serr, std::string prompt);
         void launch_interactive();
-        template <typename T> inline void register_command() {
-            T instance;
-            instance.set_log(serr);
-            commands_container.push_back(instance);
-            //commands_container.emplace(instance);
-            commands[instance.name] = (command*)(&commands_container[commands_container.size() - 1]);
-            //commands.emplace(instance.name, instance);
+        inline void register_command(command* comm) {
+            commands[comm->name] = comm;
         }
     private:
         std::istream& sin;
@@ -48,7 +43,6 @@ namespace simpleshell {
         std::vector<std::string> split(std::string, std::string);
         char delimiter = ';';
         std::map<std::string,command*> commands;
-        std::vector<std::any> commands_container;
     };
 }
 

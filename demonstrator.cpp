@@ -4,8 +4,12 @@
 
 int main() {
     simpleshell::shell shell(std::cin, std::cout, std::cerr, "Test > ");
-    shell.register_command<simpleshell::builtin::exit>();
-    shell.register_command<simpleshell::builtin::_inttest>();
+    simpleshell::builtin::exit exit;
+    simpleshell::builtin::_inttest _inttest;
+    exit.set_log(std::cout);
+    _inttest.set_log(std::cout);
+    shell.register_command(&exit);
+    shell.register_command(&_inttest);
     shell.launch_interactive();
     return 0;
 }
