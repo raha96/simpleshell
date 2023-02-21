@@ -46,7 +46,39 @@ namespace simpleshell {
         return out;
     }
 
+    // Dirty workaround
+    std::vector<std::string>* _command_names;
+    char** _getline_name_tab_completion(const char*, int, int);
     void shell_base::getline_init() {
+        _command_names = &command_names;
+        rl_attempted_completion_function = _getline_name_tab_completion;
+    }
+
+    char* _getline_name_generator(const char* pref, int state) {
+        static int index, length;
+        if (state == 0) {
+            index = 0;
+            length = strlen(pref);
+        }
+        for (; index < _command_names->size(); index++) {
+            bool match = true;
+            auto cname = (*_command_names)[index];
+            for (int i = 0; i < SS_MIN(length, cname.length()); i++) {
+                if (cname[i] != pref[i]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) {
+                index++;
+                return strdup((*_command_names)[index - 1].c_str());
+            }
+        }
+        return NULL;
+    }
+
+    char** _getline_name_tab_completion(const char* text, int start, int end) {
+        return rl_completion_matches(text, _getline_name_generator);
     }
 
     std::vector<std::string> shell_base::split (std::string str, char splitter) {

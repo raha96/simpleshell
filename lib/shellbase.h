@@ -9,6 +9,7 @@
 #include <any>
 
 #define SS_WHITESPACES " \t"
+#define SS_MIN(a,b) ((a<b)?a:b)
 
 namespace simpleshell {
     enum _command_status {
