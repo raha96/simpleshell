@@ -1,7 +1,7 @@
 #ifndef __BUILTINCOMMANDS_H__
 #define __BUILTINCOMMANDS_H__
 
-#include "simpleshell.h"
+#include "shellbase.h"
 
 namespace simpleshell::builtin {
     class exit : public command {
