@@ -11,13 +11,14 @@ namespace simpleshell {
         while (!exit) {
             sout << prompt;
             std::getline(sin, line);
-            for (std::string command : split(line, delimiter)) {
-                auto tokens = split(command, SS_WHITESPACES);
+            for (std::string single_command : split(line, delimiter)) {
+                auto tokens = split(single_command, SS_WHITESPACES);
                 auto commandname = tokens[0];
                 auto it = commands.find(commandname);
                 if (it != commands.end()) {
-                    serr << "Calling " << it->second.name << std::endl;
-                    it->second.exec(tokens);
+                    //auto comm = (command*)(it->second);
+                    //serr << "Calling " << comm->name << std::endl;
+                    std::any_cast<command>(it->second).exec(tokens);
                 }
                 else {
                     sout << "Unknown command `" << commandname << "`\n";
