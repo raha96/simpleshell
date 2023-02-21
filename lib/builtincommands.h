@@ -9,12 +9,15 @@ namespace simpleshell::builtin {
         exit() { name = "exit"; }
     protected:
         _command_status exec(std::vector<std::string>);
+        std::string _help();
     };
+    
     class _inttest : public command {
     public:
         _inttest() { name = "_inttest"; }
     protected:
         _command_status exec(std::vector<std::string>);
+        std::string _help();
     };
 }
 

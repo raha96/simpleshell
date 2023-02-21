@@ -9,6 +9,9 @@ namespace simpleshell {
     shell_base::shell_base (std::istream& _sin, std::ostream& _sout, std::ostream& _serr, std::string _prompt) : 
         sin{_sin}, sout{_sout}, serr{_serr}, prompt{_prompt} {
         getline_init();
+        _help.set_log(sout);
+        register_command(&_help);
+        _help.sh = this;
     }
 
     void shell_base::launch_interactive() {
@@ -79,6 +82,27 @@ namespace simpleshell {
 
     char** _getline_name_tab_completion(const char* text, int start, int end) {
         return rl_completion_matches(text, _getline_name_generator);
+    }
+
+    _command_status help::exec(std::vector<std::string> params) {
+        if (params.size() == 1) {
+            *log << "Usage: help <command>\n";
+            for (auto command : sh->command_names) {
+                if (command != "help")
+                    *log << "    " << command << std::endl;
+            }
+        }
+        else {
+            auto it = sh->commands.find(params[1]);
+            if (it != sh->commands.end()) {
+                *log << static_cast<command*>(it->second)->_help() << std::endl;
+            }
+            else {
+                *log << "Unknown command `" << params[1] << "`\n";
+            }
+
+        }
+        return COMSTAT_NORMAL;
     }
 
     std::vector<std::string> shell_base::split (std::string str, char splitter) {

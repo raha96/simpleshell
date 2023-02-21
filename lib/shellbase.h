@@ -22,13 +22,29 @@ namespace simpleshell {
     public:
         std::string name;
         inline void set_log(std::ostream& sout) { log = &sout; }
+        virtual std::string _help() { assert(0); }
     protected:
         // This should never be called, but it must be implemented to allow use in commands<> map.
-        virtual _command_status exec (std::vector<std::string>) { assert(0); };
+        virtual _command_status exec (std::vector<std::string>) { assert(0); }
         std::ostream* log;
     };
 
+    class shell_base;
+    
+    // This is THE exception - the only command hard-coded right here.
+    // Had to do this to be able to give it access to the command list.
+    class help : public command {
+        friend class shell_base;
+    public:
+        help() { name = "help"; }
+    protected:
+        _command_status exec(std::vector<std::string>);
+        std::string _help() { return "Use help <command>."; }
+        shell_base* sh;
+    };
+
     class shell_base {
+        friend class help;
     public:
         shell_base (std::istream& _sin, std::ostream& _sout, std::ostream& _serr, std::string prompt);
         void launch_interactive();
@@ -48,6 +64,7 @@ namespace simpleshell {
         std::vector<std::string> command_names;
         std::string getline(std::istream&);
         void getline_init();
+        help _help;
     };
 }
 
