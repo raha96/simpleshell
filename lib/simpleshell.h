@@ -34,9 +34,10 @@ namespace simpleshell {
         template <typename T> inline void register_command() {
             T instance;
             instance.set_log(serr);
-            //commands_container.push_back(instance);
-            //commands[instance.name] = &instance;
-            commands.emplace(instance.name, instance);
+            commands_container.push_back(instance);
+            //commands_container.emplace(instance);
+            commands[instance.name] = (command*)(&commands_container[commands_container.size() - 1]);
+            //commands.emplace(instance.name, instance);
         }
     private:
         std::istream& sin;
@@ -46,7 +47,7 @@ namespace simpleshell {
         std::vector<std::string> split(std::string, char);
         std::vector<std::string> split(std::string, std::string);
         char delimiter = ';';
-        std::map<std::string,std::any> commands;
+        std::map<std::string,command*> commands;
         std::vector<std::any> commands_container;
     };
 }

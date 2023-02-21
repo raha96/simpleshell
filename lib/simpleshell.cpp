@@ -17,8 +17,8 @@ namespace simpleshell {
                 auto it = commands.find(commandname);
                 if (it != commands.end()) {
                     //auto comm = (command*)(it->second);
-                    //serr << "Calling " << comm->name << std::endl;
-                    std::any_cast<command>(it->second).exec(tokens);
+                    serr << "Calling " << it->first << std::endl;
+                    it->second->exec(tokens);
                 }
                 else {
                     sout << "Unknown command `" << commandname << "`\n";
