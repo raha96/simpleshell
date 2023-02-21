@@ -1,10 +1,15 @@
 #include "simpleshell.h"
 #include "builtincommands.h"
 
+#include <readline/readline.h>
+#include <readline/history.h>
+
 namespace simpleshell {
 
     shell_base::shell_base (std::istream& _sin, std::ostream& _sout, std::ostream& _serr, std::string _prompt) : 
-        sin{_sin}, sout{_sout}, serr{_serr}, prompt{_prompt} {}
+        sin{_sin}, sout{_sout}, serr{_serr}, prompt{_prompt} {
+        getline_init();
+    }
 
     void shell_base::launch_interactive() {
         bool exit = false;
@@ -32,10 +37,16 @@ namespace simpleshell {
     }
 
     std::string shell_base::getline (std::istream& stream) {
-        std::string out;
-        sout << prompt;
-        std::getline(sin, out);
+        char* linebuf;
+        linebuf = readline(prompt.c_str());
+        std::string out(linebuf);
+        if (linebuf != nullptr && linebuf[0] != 0)
+            add_history(linebuf);
+        free(linebuf);
         return out;
+    }
+
+    void shell_base::getline_init() {
     }
 
     std::vector<std::string> shell_base::split (std::string str, char splitter) {

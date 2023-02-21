@@ -33,6 +33,7 @@ namespace simpleshell {
         void launch_interactive();
         inline void register_command(command* comm) {
             commands[comm->name] = comm;
+            command_names.push_back(comm->name);
         }
     private:
         std::istream& sin;
@@ -43,7 +44,9 @@ namespace simpleshell {
         std::vector<std::string> split(std::string, std::string);
         char delimiter = ';';
         std::map<std::string,command*> commands;
+        std::vector<std::string> command_names;
         std::string getline(std::istream&);
+        void getline_init();
     };
 }
 
