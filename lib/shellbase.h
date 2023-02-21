@@ -43,6 +43,7 @@ namespace simpleshell {
         std::vector<std::string> split(std::string, std::string);
         char delimiter = ';';
         std::map<std::string,command*> commands;
+        std::string getline(std::istream&);
     };
 }
 

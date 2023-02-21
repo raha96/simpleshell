@@ -11,8 +11,7 @@ namespace simpleshell {
         std::string line;
         char ch = 'x';
         while (!exit) {
-            sout << prompt;
-            std::getline(sin, line);
+            line = getline(sin);
             for (std::string single_command : split(line, delimiter)) {
                 auto tokens = split(single_command, SS_WHITESPACES);
                 auto commandname = tokens[0];
@@ -30,6 +29,13 @@ namespace simpleshell {
                 }
             }
         }
+    }
+
+    std::string shell_base::getline (std::istream& stream) {
+        std::string out;
+        sout << prompt;
+        std::getline(sin, out);
+        return out;
     }
 
     std::vector<std::string> shell_base::split (std::string str, char splitter) {
