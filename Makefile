@@ -1,16 +1,19 @@
-FLAGS= -std=c++17 -lreadline
+FLAGS= -lreadline
 
-build: shellbase simpleshell builtincommands
-	g++ demonstrator.cpp build/simpleshell.o build/shellbase.o build/builtincommands.o $(FLAGS) -o build/demo
+build: shell
+	g++ demonstrator.cpp build/libsimpleshell.a $(FLAGS) -o build/demo
+
+shell: shellbase simpleshell builtincommands
+	ar rvs build/libsimpleshell.a build/simpleshell.o build/shellbase.o build/builtincommands.o
 
 shellbase: _builddir lib/shellbase.cpp
-	g++ $(FLAGS) -c lib/shellbase.cpp -o build/shellbase.o
+	g++ -c lib/shellbase.cpp -o build/shellbase.o
 
 simpleshell: _builddir lib/simpleshell.cpp
-	g++ $(FLAGS) -c lib/simpleshell.cpp -o build/simpleshell.o
+	g++ -c lib/simpleshell.cpp -o build/simpleshell.o
 
 builtincommands: _builddir lib/builtincommands.cpp
-	g++ $(FLAGS) -c lib/builtincommands.cpp -o build/builtincommands.o
+	g++ -c lib/builtincommands.cpp -o build/builtincommands.o
 
 _builddir: 
 	mkdir -p build
