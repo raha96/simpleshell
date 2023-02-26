@@ -26,7 +26,7 @@ namespace simpleshell {
                 auto it = commands.find(commandname);
                 if (it != commands.end()) {
                     //auto comm = (command*)(it->second);
-                    auto retval = static_cast<command*>(it->second)->exec(tokens);
+                    auto retval = static_cast<command*>(it->second)->exec(tokens, shared_object);
                     if (retval == COMSTAT_EXIT) {
                         exit = true;
                         break;
@@ -84,7 +84,7 @@ namespace simpleshell {
         return rl_completion_matches(text, _getline_name_generator);
     }
 
-    _command_status help::exec(std::vector<std::string> params) {
+    _command_status help::exec(std::vector<std::string> params, void* shared_object = 0) {
         if (params.size() == 1) {
             *log << "Usage: help <command>\n";
             for (auto command : sh->command_names) {

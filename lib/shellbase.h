@@ -25,7 +25,7 @@ namespace simpleshell {
         virtual std::string _help() { assert(0); }
     protected:
         // This should never be called, but it must be implemented to allow use in commands<> map.
-        virtual _command_status exec (std::vector<std::string>) { assert(0); }
+        virtual _command_status exec (std::vector<std::string> params, void* shared_object = 0) { assert(0); }
         std::ostream* log;
     };
 
@@ -38,7 +38,7 @@ namespace simpleshell {
     public:
         help() { name = "help"; }
     protected:
-        _command_status exec(std::vector<std::string>);
+        _command_status exec(std::vector<std::string> params, void* shared_object);
         std::string _help() { return "Use help <command>."; }
         shell_base* sh;
     };
@@ -52,6 +52,8 @@ namespace simpleshell {
             commands[comm->name] = comm;
             command_names.push_back(comm->name);
         }
+        void set_shared_object(auto shared_object_ptr) { shared_object = (void*)shared_object_ptr; }
+        void* get_shared_object() { return shared_object; }
     private:
         std::istream& sin;
         std::ostream& sout;
@@ -65,6 +67,7 @@ namespace simpleshell {
         std::string getline(std::istream&);
         void getline_init();
         help _help;
+        void* shared_object = 0;
     };
 }
 

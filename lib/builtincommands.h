@@ -8,7 +8,7 @@ namespace simpleshell::builtin {
     public:
         exit() { name = "exit"; }
     protected:
-        _command_status exec(std::vector<std::string>);
+        _command_status exec(std::vector<std::string>, void*);
         std::string _help();
     };
     
@@ -16,7 +16,7 @@ namespace simpleshell::builtin {
     public:
         _inttest() { name = "_inttest"; }
     protected:
-        _command_status exec(std::vector<std::string>);
+        _command_status exec(std::vector<std::string>, void*);
         std::string _help();
     };
 }
