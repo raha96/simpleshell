@@ -26,6 +26,7 @@ namespace simpleshell {
     protected:
         // This should never be called, but it must be implemented to allow use in commands<> map.
         virtual _command_status exec (std::vector<std::string> params, void* shared_object = 0) { assert(0); }
+        bool check_param_num (std::vector<std::string>& params, int expected);
         std::ostream* log;
     };
 

@@ -105,6 +105,20 @@ namespace simpleshell {
         return COMSTAT_NORMAL;
     }
 
+    bool command::check_param_num (std::vector<std::string>& params, int expected) {
+        // If the number of parameters does not match the expectation, print an error message and the _help() and return false;
+        // otherwise return true.
+        if (params.size() < expected) {
+            *log << "Too few parameters. Usage: " << std::endl << _help() << std::endl;
+        }
+        else if (params.size() > expected) {
+            *log << "Too many parameters. Usage: " << std::endl << _help() << std::endl;
+        }
+        else
+            return true;
+        return false;
+    }
+
     std::vector<std::string> shell_base::split (std::string str, char splitter) {
         std::vector<std::string> out;
         std::string sbuf = "";
