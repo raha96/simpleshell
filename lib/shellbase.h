@@ -17,6 +17,8 @@ namespace simpleshell {
         COMSTAT_EXIT
     };
 
+    class shell_base;
+
     class command {
         friend class shell_base;
     public:
@@ -28,9 +30,8 @@ namespace simpleshell {
         virtual _command_status exec (std::vector<std::string> params, void* shared_object = 0) { assert(0); }
         bool check_param_num (std::vector<std::string>& params, int expected);
         std::ostream* log;
+        shell_base* sh;
     };
-
-    class shell_base;
     
     // This is THE exception - the only command hard-coded right here.
     // Had to do this to be able to give it access to the command list.
@@ -41,7 +42,6 @@ namespace simpleshell {
     protected:
         _command_status exec(std::vector<std::string> params, void* shared_object);
         std::string _help() { return "Use help <command>."; }
-        shell_base* sh;
     };
 
     class shell_base {
@@ -51,7 +51,12 @@ namespace simpleshell {
         void launch_interactive (std::string init_script = "");
         inline void register_command(command* comm) {
             commands[comm->name] = comm;
+            comm->sh = this;
             command_names.push_back(comm->name);
+        }
+        void call(std::string cmd) {
+            auto tokens = split(cmd, SS_WHITESPACES);
+            static_cast<command*>(commands[tokens[0]])->exec(tokens, shared_object);
         }
         void set_shared_object(auto shared_object_ptr) { shared_object = (void*)shared_object_ptr; }
         void* get_shared_object() { return shared_object; }
