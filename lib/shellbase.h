@@ -48,7 +48,7 @@ namespace simpleshell {
         friend class help;
     public:
         shell_base (std::istream& _sin, std::ostream& _sout, std::ostream& _serr, std::string prompt);
-        void launch_interactive();
+        void launch_interactive (std::string init_script = "");
         inline void register_command(command* comm) {
             commands[comm->name] = comm;
             command_names.push_back(comm->name);

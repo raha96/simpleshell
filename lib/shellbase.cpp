@@ -14,12 +14,18 @@ namespace simpleshell {
         _help.sh = this;
     }
 
-    void shell_base::launch_interactive() {
+    void shell_base::launch_interactive (std::string init_script) {
         bool exit = false;
+        bool first = true;
         std::string line;
         char ch = 'x';
         while (!exit) {
-            line = getline(sin);
+            if (first && init_script != "") {
+                line = init_script;
+                first = false;
+            }
+            else
+                line = getline(sin);
             for (std::string single_command : split(line, delimiter)) {
                 auto tokens = split(single_command, SS_WHITESPACES);
                 auto commandname = tokens[0];
